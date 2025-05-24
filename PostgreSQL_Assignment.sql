@@ -72,7 +72,7 @@ VALUES
         'Endangered'
     );
 
--- Insert species Sample Data
+-- Insert sightings Sample Data
 INSERT INTO
     sightings (
         sighting_id,
@@ -115,3 +115,5 @@ VALUES
         '2024-05-18 18:30:00',
         NULL
     );
+
+    
