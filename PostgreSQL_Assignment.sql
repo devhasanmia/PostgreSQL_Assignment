@@ -1,13 +1,13 @@
--- Active: 1748143135377@@127.0.0.1@5432@conservation_db
-
+-- Active: 1745317865410@@127.0.0.1@5432@conservation_db
 -- Create a new database
 CREATE DATABASE "conservation_db";
+
 
 -- Create rangers Table
 CREATE TABLE rangers (
     ranger_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    region VARCHAR(100) NOT NULL
+    region VARCHAR(120) NOT NULL
 )
 
 -- Create Species Table
@@ -23,10 +23,10 @@ CREATE TABLE species (
 
 CREATE TABLE sightings (
     sighting_id SERIAL PRIMARY KEY,
-    ranger_id INT REFERENCES rangers (ranger_id),
-    species_id INT REFERENCES species (species_id),
-    sighting_time TIMESTAMP NOT NULL,
+    species_id INT REFERENCES species (species_id) NOT NULL,
+    ranger_id INT REFERENCES rangers (ranger_id) NOT NULL,
     location VARCHAR(160),
+    sighting_time TIMESTAMP NOT NULL,
     notes TEXT
 )
 
@@ -37,7 +37,9 @@ VALUES (
         'Alice Green',
         'Northern Hills'
     ),
-    ('Bob White', 'River Delta'),
+    (
+        'Bob White', 
+        'River Delta'),
     (
         'Carol King',
         'Mountain Range'
@@ -114,11 +116,22 @@ VALUES (
         NULL
     );
 
--- Problem 1
+-- Problem 1 
+-- Description: Register a new ranger with provided data with name = 'Derek Fox' and region = 'Coastal Plains'
+
 INSERT INTO
     rangers (name, region)
 VALUES ('Derek Fox', 'Coastal Plains');
 
-SELECT * FROM rangers;
+-- Problem 2
+-- Description: Count unique species ever sighted.
+
+SELECT COUNT(DISTINCT species_id) FROM sightings;
+
+-- Problem 3
+-- Description: Find all sightings where the location includes "Pass".
 
 SELECT * FROM sightings
+    WHERE location ILIKE '%Pass%';
+
+
