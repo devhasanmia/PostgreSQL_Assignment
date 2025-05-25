@@ -1,37 +1,54 @@
--- Active: 1745317865410@@127.0.0.1@5432@conservation_db
+-- Active: 1748143135377@@127.0.0.1@5432@conservation_db
+
 -- Create a new database
-CREATE DATABASE "conservation_db"
--- Create All Tables
-CREATE TABLE
-    rangers (
-        ranger_id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        region VARCHAR(100) NOT NULL
-    )
-CREATE TABLE
-    species (
-        species_id SERIAL PRIMARY KEY,
-        common_name VARCHAR(100) NOT NULL,
-        scientific_name VARCHAR(100) NOT NULL,
-        discovery_date DATE NOT NULL,
-        conservation_status VARCHAR(50) NOT NULL
-    )
-CREATE TABLE
-    sightings (
-        sighting_id SERIAL PRIMARY KEY,
-        ranger_id INT REFERENCES rangers (ranger_id),
-        species_id INT REFERENCES species (species_id),
-        sighting_time TIMESTAMP NOT NULL,
-        location VARCHAR(160),
-        notes TEXT
-    )
-    -- Insert rangers Sample Data
+CREATE DATABASE "conservation_db";
+
+
+-- Create rangers Table
+CREATE TABLE rangers (
+    ranger_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    region VARCHAR(100) NOT NULL
+)
+
+
+-- Create Species Table
+CREATE TABLE species (
+    species_id SERIAL PRIMARY KEY,
+    common_name VARCHAR(100) NOT NULL,
+    scientific_name VARCHAR(100) NOT NULL,
+    discovery_date DATE NOT NULL,
+    conservation_status VARCHAR(50) NOT NULL
+)
+
+
+-- Create sightings Table
+
+CREATE TABLE sightings (
+    sighting_id SERIAL PRIMARY KEY,
+    ranger_id INT REFERENCES rangers (ranger_id),
+    species_id INT REFERENCES species (species_id),
+    sighting_time TIMESTAMP NOT NULL,
+    location VARCHAR(160),
+    notes TEXT
+)
+
+-- Insert rangers Sample Data
 INSERT INTO
     rangers (ranger_id, name, region)
-VALUES
-    (1, 'Alice Green', 'Northern Hills'),
+VALUES (
+        1,
+        'Alice Green',
+        'Northern Hills'
+    ),
     (2, 'Bob White', 'River Delta'),
-    (3, 'Carol King', 'Mountain Range');
+    (
+        3,
+        'Carol King',
+        'Mountain Range'
+    );
+
+
 
 -- Insert species Sample Data
 INSERT INTO
@@ -42,8 +59,7 @@ INSERT INTO
         discovery_date,
         conservation_status
     )
-VALUES
-    (
+VALUES (
         1,
         'Snow Leopard',
         'Panthera uncia',
@@ -72,6 +88,8 @@ VALUES
         'Endangered'
     );
 
+    
+
 -- Insert sightings Sample Data
 INSERT INTO
     sightings (
@@ -82,8 +100,7 @@ INSERT INTO
         sighting_time,
         notes
     )
-VALUES
-    (
+VALUES (
         1,
         1,
         1,
@@ -115,5 +132,3 @@ VALUES
         '2024-05-18 18:30:00',
         NULL
     );
-
-    
