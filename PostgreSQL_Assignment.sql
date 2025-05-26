@@ -1,7 +1,7 @@
--- Active: 1745317865410@@127.0.0.1@5432@conservation_db
+-- Active: 1748143135377@@127.0.0.1@5432@conservation_db
+
 -- Create a new database
 CREATE DATABASE "conservation_db";
-
 
 -- Create rangers Table
 CREATE TABLE rangers (
@@ -37,9 +37,7 @@ VALUES (
         'Alice Green',
         'Northern Hills'
     ),
-    (
-        'Bob White', 
-        'River Delta'),
+    ('Bob White', 'River Delta'),
     (
         'Carol King',
         'Mountain Range'
@@ -116,7 +114,7 @@ VALUES (
         NULL
     );
 
--- Problem 1 
+-- Problem 1
 -- Description: Register a new ranger with provided data with name = 'Derek Fox' and region = 'Coastal Plains'
 
 INSERT INTO
@@ -131,36 +129,74 @@ SELECT COUNT(DISTINCT species_id) FROM sightings;
 -- Problem 3
 -- Description: Find all sightings where the location includes "Pass".
 
-SELECT * FROM sightings
-    WHERE location ILIKE '%Pass%';
-
+SELECT * FROM sightings WHERE location ILIKE '%Pass%';
 
 -- Problem 4
 -- Description: List each ranger's name and their total number of sightings.
 
 SELECT rangers.name, COUNT(sightings.sighting_id) AS total_sightings
 FROM rangers
-LEFT JOIN sightings ON rangers.ranger_id = sightings.ranger_id
-GROUP BY rangers.name;
-
+    LEFT JOIN sightings ON rangers.ranger_id = sightings.ranger_id
+GROUP BY
+    rangers.name;
 
 -- Problem 5
 -- Description: List species that have never been sighted.
 
-SELECT common_name FROM species
-    WHERE species_id NOT IN (
-    SELECT DISTINCT species_id FROM sightings
-);
-
+SELECT common_name
+FROM species
+WHERE
+    species_id NOT IN (
+        SELECT DISTINCT
+            species_id
+        FROM sightings
+    );
 
 -- Problem 6
 -- Description: Show the most recent 2 sightings.
 
 SELECT sp.common_name, s.sighting_time, r.name
-FROM sightings s
-JOIN species sp ON s.species_id = sp.species_id
-JOIN rangers r ON s.ranger_id = r.ranger_id
+FROM
+    sightings s
+    JOIN species sp ON s.species_id = sp.species_id
+    JOIN rangers r ON s.ranger_id = r.ranger_id
 ORDER BY s.sighting_time DESC
 LIMIT 2;
 
+-- Problem 7
+-- Description: Update all species discovered before year 1800 to have status 'Historic'.
 
+UPDATE species
+SET
+    conservation_status = 'Historic'
+WHERE
+    discovery_date < '1800-01-01';
+
+-- Problem 8
+-- Description: Label each sighting's time of day as 'Morning', 'Afternoon', or 'Evening'.
+
+SELECT
+    sighting_id,
+    CASE
+        WHEN EXTRACT(
+            HOUR
+            FROM sighting_time
+        ) < 12 THEN 'Morning'
+        WHEN EXTRACT(
+            HOUR
+            FROM sighting_time
+        ) BETWEEN 12 AND 17  THEN 'Afternoon'
+        ELSE 'Evening'
+    END AS time_of_day
+FROM sightings;
+
+-- Problem 9
+-- Description: Delete rangers who have never sighted any species.
+
+DELETE FROM rangers
+WHERE
+    ranger_id NOT IN (
+        SELECT DISTINCT
+            ranger_id
+        FROM sightings
+    );
